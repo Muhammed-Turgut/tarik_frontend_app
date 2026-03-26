@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tark_frontend_app.presentation.view.HomeScreen
+import com.example.tark_frontend_app.presentation.view.MapsScreen
 import com.example.tark_frontend_app.presentation.view.SplashScreen
 
 @Composable
@@ -19,7 +20,8 @@ fun NavGraph(
     NavHost(
         navController = navHostController,
         startDestination = "SplashScreen",
-        modifier = modifier.background(color = Color.Black)
+        modifier = modifier
+            .background(color = Color(0xFFFFFFFF))
     ) {
 
         composable("SplashScreen") {
@@ -28,6 +30,10 @@ fun NavGraph(
 
         composable("HomeScreen") {
             HomeScreen()
+        }
+
+        composable("MapScreen") {
+            MapsScreen()
         }
     }
 
