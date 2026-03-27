@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -43,11 +44,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tark_frontend_app.R
 import com.example.tark_frontend_app.presentation.composbles.common.CustomButton
 import com.example.tark_frontend_app.presentation.composbles.common.CustomTextField
 import com.example.tark_frontend_app.presentation.composbles.common.home.CriticalLocationsElement
 import com.example.tark_frontend_app.presentation.composbles.common.home.LiveAnnouncements
+import com.example.tark_frontend_app.presentation.viewModel.HomeViewModel
 import kotlinx.coroutines.flow.sample
 import java.nio.file.Files.size
 
@@ -55,24 +58,24 @@ import java.nio.file.Files.size
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    ){
-
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     val sheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.PartiallyExpanded // başlangıçta yarı açık ✅
+            initialValue = SheetValue.PartiallyExpanded
         )
     )
 
     BottomSheetScaffold(
         scaffoldState = sheetState,
-        sheetPeekHeight = 124.dp, // ✅ her zaman bu kadar açık kalır
+        sheetPeekHeight = 124.dp,
         sheetContainerColor = Color.White,
         containerColor = Color(0xFFF9F7F7),
         sheetContentColor = Color.White,
         sheetDragHandle = null,
         sheetContent = {
-            //İÇERİK KISMI
             DetailsPanel()
         }
     ) { paddingValues ->
@@ -83,15 +86,26 @@ fun HomeScreen(
                 .background(Color.White),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
-
+        ) {
             AppBar()
-            MapsScreen()
 
+            when (val state = uiState) {
+                is HomeViewModel.UiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is HomeViewModel.UiState.Success -> {
+                    MapsScreen(earthquakes = state.earthquakes) // ✅ veriyi geç
+                }
+                is HomeViewModel.UiState.Error -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = state.message, color = Color.Red)
+                    }
+                }
+            }
         }
     }
-
-
 }
 
 

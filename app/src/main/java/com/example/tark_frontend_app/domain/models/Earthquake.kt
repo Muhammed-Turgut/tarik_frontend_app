@@ -1,10 +1,10 @@
 package com.example.tark_frontend_app.domain.models
 
 data class Earthquake(
-    val history: String,
+    val date: String,          // was: history
     val location: String,
-    val intensity: String,
-    val latitude: String,
-    val longitude: String,
-    val depth: String
+    val magnitude: Double?,    // was: intensity — nullable to match DTO
+    val latitude: Double?,
+    val longitude: Double?,
+    val depth: Double?
 )

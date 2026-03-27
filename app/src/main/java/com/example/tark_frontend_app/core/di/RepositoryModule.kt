@@ -1,7 +1,9 @@
 package com.example.tark_frontend_app.core.di
 
+import com.example.tark_frontend_app.data.repositories.AFADRepositoryImpl
 import com.example.tark_frontend_app.data.repositories.PermissionRepositoryImpl
 import com.example.tark_frontend_app.data.repositories.UsbPortRepositoryImpl
+import com.example.tark_frontend_app.domain.repositories.AFADRepository
 import com.example.tark_frontend_app.domain.repositories.PermissionRepository
 import com.example.tark_frontend_app.domain.repositories.UsbPortRepository
 import dagger.Binds
@@ -25,5 +27,11 @@ abstract class RepositoryModule {
     abstract fun bindUsbPermissionRepository(
         impl: PermissionRepositoryImpl
     ): PermissionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAFADRepository(
+        impl: AFADRepositoryImpl
+    ): AFADRepository
 
 }
